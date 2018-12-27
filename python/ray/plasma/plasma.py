@@ -23,7 +23,8 @@ def start_plasma_store(plasma_store_memory=DEFAULT_PLASMA_STORE_MEMORY,
                        stderr_file=None,
                        plasma_directory=None,
                        huge_pages=False,
-                       socket_name=None):
+                       socket_name=None,
+                       external_store=None):
     """Start a plasma store process.
 
     Args:
@@ -41,6 +42,7 @@ def start_plasma_store(plasma_store_memory=DEFAULT_PLASMA_STORE_MEMORY,
             Object Store with hugetlbfs support. Requires plasma_directory.
         socket_name (str): If provided, it will specify the socket
             name used by the plasma store.
+        external_store (str): External store to use for evicted objects.
 
     Return:
         A tuple of the name of the plasma store socket and the process ID of
@@ -73,6 +75,8 @@ def start_plasma_store(plasma_store_memory=DEFAULT_PLASMA_STORE_MEMORY,
         command += ["-d", plasma_directory]
     if huge_pages:
         command += ["-h"]
+    if external_store is not None:
+        command += ["-e", external_store]
     if use_valgrind:
         pid = subprocess.Popen(
             [
