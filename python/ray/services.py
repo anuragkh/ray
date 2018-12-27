@@ -1141,8 +1141,14 @@ def start_plasma_store(node_ip_address,
 
     # Print the object store memory using two decimal places.
     object_store_memory_str = (object_store_memory / 10**7) / 10**2
-    logger.info("Starting the Plasma object store with {} GB memory "
-                "using {}.".format(object_store_memory_str, plasma_directory))
+    if plasma_external_store is not None:
+        logger.info("Starting the Plasma object store with {} GB memory "
+                    "using {}, backed by {}.".format(object_store_memory_str,
+                                                     plasma_directory,
+                                                     plasma_external_store))
+    else:
+        logger.info("Starting the Plasma object store with {} GB memory "
+                    "using {}.".format(object_store_memory_str, plasma_directory))
     # Start the Plasma store.
     plasma_store_name, p1 = ray.plasma.start_plasma_store(
         plasma_store_memory=object_store_memory,
