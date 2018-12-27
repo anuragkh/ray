@@ -139,6 +139,9 @@ ray::Status ObjectManager::Pull(const ObjectID &object_id) {
         it->second.client_locations =
             std::vector<ClientID>(client_ids.begin(), client_ids.end());
         if (it->second.client_locations.empty()) {
+          // Try to un-evict the object from the external store.
+          buffer_pool_.TryUnevict(object_id);
+
           // The object locations are now empty, so we should wait for the next
           // notification about a new object location.  Cancel the timer until
           // the next Pull attempt since there are no more clients to try.

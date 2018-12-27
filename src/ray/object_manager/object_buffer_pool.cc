@@ -1,4 +1,5 @@
 #include "ray/object_manager/object_buffer_pool.h"
+#include "object_buffer_pool.h"
 
 namespace ray {
 
@@ -32,6 +33,12 @@ uint64_t ObjectBufferPool::GetBufferLength(uint64_t chunk_index, uint64_t data_s
   return (chunk_index + 1) * default_chunk_size_ > data_size
              ? data_size % default_chunk_size_
              : default_chunk_size_;
+}
+
+void ObjectBufferPool::TryUnevict(const ObjectID &object_id) {
+  std::lock_guard<std::mutex> lock(pool_mutex_);
+  RAY_LOG(DEBUG) << "TryUnevict " << object_id;
+  store_client_.TryUnevict({object_id.to_plasma_id()});
 }
 
 std::pair<const ObjectBufferPool::ChunkInfo &, ray::Status> ObjectBufferPool::GetChunk(
