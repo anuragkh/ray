@@ -1104,6 +1104,7 @@ def start_plasma_store(node_ip_address,
                        plasma_directory=None,
                        huge_pages=False,
                        plasma_store_socket_name=None,
+                       plasma_external_store=None,
                        redis_password=None):
     """This method starts an object store process.
 
@@ -1126,6 +1127,10 @@ def start_plasma_store(node_ip_address,
             be created.
         huge_pages: Boolean flag indicating whether to start the Object
             Store with hugetlbfs support. Requires plasma_directory.
+        plasma_store_socket_name (str): If provided, it will specify the socket
+            name used by the plasma store.
+        plasma_external_store (str) : If provided, it will specify the external
+            store to use for evicted objects.
         redis_password (str): The password of the redis server.
 
     Return:
@@ -1146,7 +1151,8 @@ def start_plasma_store(node_ip_address,
         stderr_file=store_stderr_file,
         plasma_directory=plasma_directory,
         huge_pages=huge_pages,
-        socket_name=plasma_store_socket_name)
+        socket_name=plasma_store_socket_name,
+        external_store=plasma_external_store)
 
     if cleanup:
         all_processes[PROCESS_TYPE_PLASMA_STORE].append(p1)
@@ -1302,6 +1308,7 @@ def start_ray_processes(address_info=None,
                         huge_pages=False,
                         autoscaling_config=None,
                         plasma_store_socket_name=None,
+                        plasma_external_store=None,
                         raylet_socket_name=None,
                         temp_dir=None,
                         _internal_config=None):
@@ -1373,6 +1380,8 @@ def start_ray_processes(address_info=None,
         autoscaling_config: path to autoscaling config file.
         plasma_store_socket_name (str): If provided, it will specify the socket
             name used by the plasma store.
+        plasma_external_store (str) : If provided, it will specify the external
+            store to use for evicted objects.
         raylet_socket_name (str): If provided, it will specify the socket path
             used by the raylet process.
         temp_dir (str): If provided, it will specify the root temporary
@@ -1510,6 +1519,7 @@ def start_ray_processes(address_info=None,
             plasma_directory=plasma_directory,
             huge_pages=huge_pages,
             plasma_store_socket_name=plasma_store_socket_name,
+            plasma_external_store=plasma_external_store,
             redis_password=redis_password)
         object_store_addresses.append(object_store_address)
         time.sleep(0.1)
@@ -1566,6 +1576,7 @@ def start_ray_node(node_ip_address,
                    plasma_directory=None,
                    huge_pages=False,
                    plasma_store_socket_name=None,
+                   plasma_external_store=None,
                    raylet_socket_name=None,
                    temp_dir=None,
                    _internal_config=None):
@@ -1607,6 +1618,8 @@ def start_ray_node(node_ip_address,
             Store with hugetlbfs support. Requires plasma_directory.
         plasma_store_socket_name (str): If provided, it will specify the socket
             name used by the plasma store.
+        plasma_external_store (str) : If provided, it will specify the external
+            store to use for evicted objects.
         raylet_socket_name (str): If provided, it will specify the socket path
             used by the raylet process.
         temp_dir (str): If provided, it will specify the root temporary
@@ -1639,6 +1652,7 @@ def start_ray_node(node_ip_address,
         plasma_directory=plasma_directory,
         huge_pages=huge_pages,
         plasma_store_socket_name=plasma_store_socket_name,
+        plasma_external_store=plasma_external_store,
         raylet_socket_name=raylet_socket_name,
         temp_dir=temp_dir,
         _internal_config=_internal_config)
@@ -1669,6 +1683,7 @@ def start_ray_head(address_info=None,
                    huge_pages=False,
                    autoscaling_config=None,
                    plasma_store_socket_name=None,
+                   plasma_external_store=None,
                    raylet_socket_name=None,
                    temp_dir=None,
                    _internal_config=None):
@@ -1733,6 +1748,8 @@ def start_ray_head(address_info=None,
         autoscaling_config: path to autoscaling config file.
         plasma_store_socket_name (str): If provided, it will specify the socket
             name used by the plasma store.
+        plasma_external_store (str) : If provided, it will specify the external
+            store to use for evicted objects.
         raylet_socket_name (str): If provided, it will specify the socket path
             used by the raylet process.
         temp_dir (str): If provided, it will specify the root temporary
@@ -1772,6 +1789,7 @@ def start_ray_head(address_info=None,
         huge_pages=huge_pages,
         autoscaling_config=autoscaling_config,
         plasma_store_socket_name=plasma_store_socket_name,
+        plasma_external_store=plasma_external_store,
         raylet_socket_name=raylet_socket_name,
         temp_dir=temp_dir,
         _internal_config=_internal_config)

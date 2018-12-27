@@ -1293,6 +1293,7 @@ def _init(address_info=None,
           include_webui=True,
           driver_id=None,
           plasma_store_socket_name=None,
+          plasma_external_store=None,
           raylet_socket_name=None,
           temp_dir=None,
           _internal_config=None):
@@ -1358,6 +1359,8 @@ def _init(address_info=None,
         driver_id: The ID of driver.
         plasma_store_socket_name (str): If provided, it will specify the socket
             name used by the plasma store.
+        plasma_external_store (str) : If provided, it will specify the external
+            store to use for evicted objects.
         raylet_socket_name (str): If provided, it will specify the socket path
             used by the raylet process.
         temp_dir (str): If provided, it will specify the root temporary
@@ -1439,6 +1442,7 @@ def _init(address_info=None,
             huge_pages=huge_pages,
             include_webui=include_webui,
             plasma_store_socket_name=plasma_store_socket_name,
+            plasma_external_store=plasma_external_store,
             raylet_socket_name=raylet_socket_name,
             temp_dir=temp_dir,
             _internal_config=_internal_config)
@@ -1551,6 +1555,7 @@ def init(redis_address=None,
          logging_level=logging.INFO,
          logging_format=ray_constants.LOGGER_FORMAT,
          plasma_store_socket_name=None,
+         plasma_external_store=None,
          raylet_socket_name=None,
          temp_dir=None,
          _internal_config=None,
@@ -1626,6 +1631,8 @@ def init(redis_address=None,
             which means only contains the message.
         plasma_store_socket_name (str): If provided, it will specify the socket
             name used by the plasma store.
+        plasma_external_store (str) : If provided, it will specify the external
+            store to use for evicted objects.
         raylet_socket_name (str): If provided, it will specify the socket path
             used by the raylet process.
         temp_dir (str): If provided, it will specify the root temporary
@@ -1697,6 +1704,7 @@ def init(redis_address=None,
         collect_profiling_data=collect_profiling_data,
         driver_id=driver_id,
         plasma_store_socket_name=plasma_store_socket_name,
+        plasma_external_store=plasma_external_store,
         raylet_socket_name=raylet_socket_name,
         temp_dir=temp_dir,
         _internal_config=_internal_config)
