@@ -52,7 +52,7 @@ Status S3Store::Connect(const std::string &endpoint) {
 Status S3Store::Put(const std::vector<ObjectID> &object_ids,
                     const std::vector<std::string> &object_data,
                     const std::vector<std::string> &object_metadata) {
-  for (int i = 0; i < object_ids.size(); ++i) {
+  for (size_t i = 0; i < object_ids.size(); ++i) {
     auto outcome = client_->PutObject(MakePutRequest(object_ids[i], object_data[i], object_metadata[i]));
     ParsePutResponse(outcome);
   }
