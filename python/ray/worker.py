@@ -391,8 +391,9 @@ class Worker(object):
                     results += self.plasma_client.get(
                         object_ids[i:(
                             i + ray._config.worker_get_request_size())],
-                        timeout,
-                        self.get_serialization_context(self.task_driver_id))
+                        timeout_ms=timeout,
+                        try_external=False,
+                        serialization_context=self.get_serialization_context(self.task_driver_id))
                 return results
             except pyarrow.lib.ArrowInvalid:
                 # TODO(ekl): the local scheduler could include relevant
