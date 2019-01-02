@@ -188,12 +188,12 @@ void ObjectManager::TryPull(const ObjectID &object_id) {
     RAY_CHECK(client_id != client_id_);
   }
 
-  // Try pulling from the client.
-  if (client_id_.binary() == "external_store") {
-    // Try to un-evict the object from the external store; this is an async
-    // operation anyway, so it should not be a bottleneck.
+  // If the client ID is nil, it means that the object was evicted to plasma's external store
+  if (client_id.is_nil()) {
+    // Try to un-evict the object from the external store.
     buffer_pool_.TryUnevict(object_id);
   } else {
+    // Try pulling from the client.
     PullEstablishConnection(object_id, client_id);
   }
 

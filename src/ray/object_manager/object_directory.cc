@@ -112,7 +112,7 @@ ray::Status ObjectDirectory::ReportObjectRemoved(const ObjectID &object_id,
   object_evictions_[object_id]++;
 
   auto data2 = std::make_shared<ObjectTableDataT>();
-  data->manager = "external_store";
+  data->manager = UniqueID::nil().binary();
   data->is_eviction = false;
   data->num_evictions = object_evictions_[object_id];
   ray::Status status2 =
