@@ -110,6 +110,13 @@ ray::Status ObjectDirectory::ReportObjectRemoved(const ObjectID &object_id,
   // log. We track the number of evictions so that the next eviction, if there
   // is one, is unique.
   object_evictions_[object_id]++;
+
+  auto data2 = std::make_shared<ObjectTableDataT>();
+  data->manager = "external_store";
+  data->is_eviction = false;
+  data->num_evictions = object_evictions_[object_id];
+  ray::Status status2 =
+      gcs_client_->object_table().Append(JobID::nil(), object_id, data2, nullptr);
   return status;
 };
 

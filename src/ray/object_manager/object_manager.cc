@@ -118,10 +118,6 @@ ray::Status ObjectManager::Pull(const ObjectID &object_id) {
     return ray::Status::OK();
   }
 
-  // Try to un-evict the object from the external store; this is an async
-  // operation anyway, so it should not be a bottleneck.
-  buffer_pool_.TryUnevict(object_id);
-
   pull_requests_.emplace(object_id, PullRequest());
   // Subscribe to object notifications. A notification will be received every
   // time the set of client IDs for the object changes. Notifications will also
@@ -193,7 +189,13 @@ void ObjectManager::TryPull(const ObjectID &object_id) {
   }
 
   // Try pulling from the client.
-  PullEstablishConnection(object_id, client_id);
+  if (client_id_.binary() == "external_store") {
+    // Try to un-evict the object from the external store; this is an async
+    // operation anyway, so it should not be a bottleneck.
+    buffer_pool_.TryUnevict(object_id);
+  } else {
+    PullEstablishConnection(object_id, client_id);
+  }
 
   // If there are more clients to try, try them in succession, with a timeout
   // in between each try.
