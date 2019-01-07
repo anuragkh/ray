@@ -191,7 +191,10 @@ void ObjectManager::TryPull(const ObjectID &object_id) {
   // If the client ID is nil, it means that the object was evicted to plasma's external store
   if (client_id.is_nil()) {
     // Try to un-evict the object from the external store.
-    buffer_pool_.TryUnevict(object_id);
+    while (!buffer_pool_.TryUnevict(object_id)) {
+      RAY_LOG(WARNING) << "Too many un-eviction requests, trying again in 1ms...";
+      usleep(1000);
+    }
   } else {
     // Try pulling from the client.
     PullEstablishConnection(object_id, client_id);

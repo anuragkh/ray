@@ -64,7 +64,7 @@ class ObjectBufferPool {
   /// store.
   ///
   /// \param object_id The ObjectID.
-  void TryUnevict(const ObjectID &object_id);
+  bool TryUnevict(const ObjectID &object_id);
 
   /// Returns a chunk of an object at the given chunk_index. The object chunk serves
   /// as the data that is to be written to a connection as part of sending an object to
