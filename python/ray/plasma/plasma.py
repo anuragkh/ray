@@ -19,6 +19,7 @@ DEFAULT_PLASMA_STORE_MEMORY = 10**9
 def start_plasma_store(plasma_store_memory=DEFAULT_PLASMA_STORE_MEMORY,
                        use_valgrind=False,
                        use_profiler=False,
+                       use_one_memory_mapped_file=True,
                        stdout_file=None,
                        stderr_file=None,
                        plasma_directory=None,
@@ -32,6 +33,8 @@ def start_plasma_store(plasma_store_memory=DEFAULT_PLASMA_STORE_MEMORY,
             of valgrind. If this is True, use_profiler must be False.
         use_profiler (bool): True if the plasma store should be started inside
             a profiler. If this is True, use_valgrind must be False.
+        use_one_memory_mapped_file: True if plasma store should use one memory
+            mapped file
         stdout_file: A file handle opened for writing to redirect stdout to. If
             no redirection should happen, then this should be None.
         stderr_file: A file handle opened for writing to redirect stderr to. If
@@ -71,6 +74,8 @@ def start_plasma_store(plasma_store_memory=DEFAULT_PLASMA_STORE_MEMORY,
         plasma_store_executable, "-s", plasma_store_name, "-m",
         str(plasma_store_memory)
     ]
+    if use_one_memory_mapped_file:
+        command += ["-f"]
     if plasma_directory is not None:
         command += ["-d", plasma_directory]
     if huge_pages:

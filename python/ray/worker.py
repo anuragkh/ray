@@ -1294,6 +1294,7 @@ def _init(address_info=None,
           include_webui=True,
           driver_id=None,
           plasma_store_socket_name=None,
+          plasma_use_one_memory_mapped_file=True,
           plasma_external_store=None,
           raylet_socket_name=None,
           temp_dir=None,
@@ -1360,6 +1361,8 @@ def _init(address_info=None,
         driver_id: The ID of driver.
         plasma_store_socket_name (str): If provided, it will specify the socket
             name used by the plasma store.
+        plasma_use_one_memory_mapped_file: True if plasma store should use one
+            memory mapped file
         plasma_external_store (str) : If provided, it will specify the external
             store to use for evicted objects.
         raylet_socket_name (str): If provided, it will specify the socket path
@@ -1443,6 +1446,7 @@ def _init(address_info=None,
             huge_pages=huge_pages,
             include_webui=include_webui,
             plasma_store_socket_name=plasma_store_socket_name,
+            plasma_use_one_memory_mapped_file=plasma_use_one_memory_mapped_file,
             plasma_external_store=plasma_external_store,
             raylet_socket_name=raylet_socket_name,
             temp_dir=temp_dir,
