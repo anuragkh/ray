@@ -189,11 +189,12 @@ void ObjectManager::TryPull(const ObjectID &object_id) {
   }
 
   // If the client ID is nil, it means that the object was evicted to plasma's external store
+  bool backoff = false;
   if (client_id.is_nil()) {
     // Try to un-evict the object from the external store.
-    while (!buffer_pool_.TryUnevict(object_id)) {
-      RAY_LOG(WARNING) << "Too many un-eviction requests, trying again in 1ms...";
-      usleep(1000);
+    backoff = !buffer_pool_.TryUnevict(object_id));
+    if (backoff) {
+      RAY_LOG(WARNING) << "Too many un-evict requests, backing off...";
     }
   } else {
     // Try pulling from the client.
@@ -202,7 +203,7 @@ void ObjectManager::TryPull(const ObjectID &object_id) {
 
   // If there are more clients to try, try them in succession, with a timeout
   // in between each try.
-  if (!it->second.client_locations.empty()) {
+  if (!it->second.client_locations.empty() || backoff) {
     if (it->second.retry_timer == nullptr) {
       // Set the timer if we haven't already.
       it->second.retry_timer = std::unique_ptr<boost::asio::deadline_timer>(
@@ -212,7 +213,7 @@ void ObjectManager::TryPull(const ObjectID &object_id) {
     // Wait for a timeout. If we receive the object or a caller Cancels the
     // Pull within the timeout, then nothing will happen. Otherwise, the timer
     // will fire and the next client in the list will be tried.
-    boost::posix_time::milliseconds retry_timeout(config_.pull_timeout_ms);
+    boost::posix_time::milliseconds retry_timeout(backoff ? config_.unevict_timeout_ms : config_.pull_timeout_ms);
     it->second.retry_timer->expires_from_now(retry_timeout);
     it->second.retry_timer->async_wait(
         [this, object_id](const boost::system::error_code &error) {
