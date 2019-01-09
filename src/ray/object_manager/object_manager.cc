@@ -192,7 +192,7 @@ void ObjectManager::TryPull(const ObjectID &object_id) {
   bool backoff = false;
   if (client_id.is_nil()) {
     // Try to un-evict the object from the external store.
-    backoff = !buffer_pool_.TryUnevict(object_id));
+    backoff = !buffer_pool_.TryUnevict(object_id);
     if (backoff) {
       RAY_LOG(WARNING) << "Too many un-evict requests, backing off...";
     }
