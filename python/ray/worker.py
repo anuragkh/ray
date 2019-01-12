@@ -392,7 +392,6 @@ class Worker(object):
                         object_ids[i:(
                             i + ray._config.worker_get_request_size())],
                         timeout_ms=timeout,
-                        try_external=False,
                         serialization_context=self.get_serialization_context(self.task_driver_id))
                 return results
             except pyarrow.lib.ArrowInvalid:
