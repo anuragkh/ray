@@ -99,25 +99,13 @@ ray::Status ObjectDirectory::ReportObjectAdded(
 ray::Status ObjectDirectory::ReportObjectRemoved(const ObjectID &object_id,
                                                  const ClientID &client_id) {
 
-  auto uneviction_entry = std::make_shared<ObjectTableDataT>();
-  uneviction_entry->manager = ClientID::nil().binary();
-  uneviction_entry->is_eviction = false;
-  uneviction_entry->num_evictions = object_evictions_[object_id];
-  ray::Status status2 =
-      gcs_client_->object_table().Append(JobID::nil(), object_id, uneviction_entry, nullptr);
-  // Increment the number of times we've evicted this object. NOTE(swang): This
-  // is only necessary because the Ray redis module expects unique entries in a
-  // log. We track the number of evictions so that the next eviction, if there
-  // is one, is unique.
-  object_evictions_[object_id]++;
-
   // Append the eviction entry to the object table.
-  auto eviction_entry = std::make_shared<ObjectTableDataT>();
-  eviction_entry->manager = client_id.binary();
-  eviction_entry->is_eviction = true;
-  eviction_entry->num_evictions = object_evictions_[object_id];
+  auto data = std::make_shared<ObjectTableDataT>();
+  data->manager = client_id.binary();
+  data->is_eviction = true;
+  data->num_evictions = object_evictions_[object_id];
   ray::Status status =
-      gcs_client_->object_table().Append(JobID::nil(), object_id, eviction_entry, nullptr);
+      gcs_client_->object_table().Append(JobID::nil(), object_id, data, nullptr);
   // Increment the number of times we've evicted this object. NOTE(swang): This
   // is only necessary because the Ray redis module expects unique entries in a
   // log. We track the number of evictions so that the next eviction, if there

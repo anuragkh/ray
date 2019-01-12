@@ -35,13 +35,6 @@ uint64_t ObjectBufferPool::GetBufferLength(uint64_t chunk_index, uint64_t data_s
              : default_chunk_size_;
 }
 
-bool ObjectBufferPool::TryUnevict(const ObjectID &object_id) {
-  std::lock_guard<std::mutex> lock(pool_mutex_);
-  RAY_LOG(DEBUG) << "TryUnevict " << object_id.hex();
-  auto s = store_client_.TryUnevict(object_id.to_plasma_id());
-  return !s.IsExecutionError();
-}
-
 std::pair<const ObjectBufferPool::ChunkInfo &, ray::Status> ObjectBufferPool::GetChunk(
     const ObjectID &object_id, uint64_t data_size, uint64_t metadata_size,
     uint64_t chunk_index) {

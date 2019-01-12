@@ -37,9 +37,6 @@ struct ObjectManagerConfig {
   /// The time in milliseconds to wait before retrying a pull
   /// that fails due to client id lookup.
   uint pull_timeout_ms;
-  /// The time in milliseconds to wait before retrying an unevict
-  /// that fails due to too many requests.
-  uint unevict_timeout_ms;
   /// Maximum number of sends allowed.
   int max_sends;
   /// Maximum number of receives allowed.

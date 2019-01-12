@@ -60,12 +60,6 @@ class ObjectBufferPool {
   /// \return The buffer length of the chunk at chunk_index.
   uint64_t GetBufferLength(uint64_t chunk_index, uint64_t data_size);
 
-  /// Tries to un-evict an object from the external store back into the plasma
-  /// store.
-  ///
-  /// \param object_id The ObjectID.
-  bool TryUnevict(const ObjectID &object_id);
-
   /// Returns a chunk of an object at the given chunk_index. The object chunk serves
   /// as the data that is to be written to a connection as part of sending an object to
   /// a remote node.
